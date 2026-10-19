@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JAM Economics Tracker</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1a73e8">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=IBM+Plex+Mono:wght@500&family=Public+Sans:wght@400;500;600&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f3f4;--card:#fff;--tx:#202124;--mu:#5f6368;--ln:#dadce0;--ac:#1a73e8}
+@media(prefers-color-scheme:dark){:root{--bg:#202124;--card:#2d2e31;--tx:#e8eaed;--mu:#9aa0a6;--ln:#3c4043;--ac:#8ab4f8}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 'Public Sans',system-ui,sans-serif;background:var(--bg);color:var(--tx);display:grid;grid-template:56px 1fr/240px 1fr;min-height:100vh}
+header{grid-column:1/3;display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--card);border-bottom:1px solid var(--ln);position:sticky;top:0;z-index:5}
+header b{font:600 20px 'Source Serif 4',serif}
+header span{margin-left:auto;color:var(--ac);font-weight:600}
+#mn{display:none;background:none;border:0;font-size:22px;color:var(--tx)}
+#sb{padding:12px 8px;border-right:1px solid var(--ln)}
+#sb a{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:0 20px 20px 0;color:var(--tx);text-decoration:none}
+#sb a:hover{background:var(--ln)}#sb i{width:12px;height:12px;border-radius:50%}#sb hr{border:0;border-top:1px solid var(--ln);margin:8px 0}
+main{padding:20px;max-width:1000px;width:100%}
+h1,h2{font-family:'Source Serif 4',serif;font-weight:600}h1{margin:0 0 8px}
+h2{font-size:19px;margin:22px 0 8px}
+h3{font-size:14px;color:var(--mu);margin:16px 0 4px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:14px;margin:8px 0;display:block;color:inherit;text-decoration:none}
+.row{display:flex;gap:12px;align-items:center}
+.g2{display:grid;grid-template-columns:1fr 260px;gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.sc{padding:0;overflow:hidden}.sc p{padding:0 14px 12px;color:var(--mu);margin:10px 0 0}
+.sc .ban{padding:34px 16px 14px;font:600 19px 'Source Serif 4',serif;border-radius:0}
+.ban{color:#fff;padding:18px 20px;border-radius:8px}.ban h1{color:#fff;font-size:28px}
+.big{font:500 44px 'IBM Plex Mono',monospace;color:var(--ac);line-height:1.1}
+summary{display:flex;gap:8px;align-items:center;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}
+.tt{flex:1;font-weight:500}
+em{font-style:normal;font-size:12px;padding:2px 8px;border-radius:10px;background:var(--ln)}
+.yH{background:#fce8e6;color:#c5221f}.yM{background:#fef7e0;color:#b06000}.nw{background:#e8f0fe;color:#1a73e8}
+button,select,input[type=number]{font:inherit;padding:6px 14px;border-radius:18px;border:1px solid var(--ln);background:var(--card);color:var(--tx);cursor:pointer}
+button[data-s="1"]{background:#fef7e0;color:#202124}button[data-s="2"]{background:#e6f4ea;color:#202124}button[data-s="3"]{background:#d2e3fc;color:#202124}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+textarea{width:100%;min-height:90px;font:500 20px/1.3 Caveat,cursive;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px}
+.gd{font:16px/1.65 'Source Serif 4',serif;margin:0;max-width:70ch}.mu,small{color:var(--mu)}
+@media(max-width:800px){body{grid-template-columns:1fr}header{grid-column:1}#mn{display:block}
+#sb{display:none;position:fixed;top:56px;left:0;bottom:0;width:250px;background:var(--card);z-index:6}body.o #sb{display:block}.g2{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><button id="mn" aria-label="Menu" onclick="document.body.classList.toggle('o')">&#9776;</button><b>JAM Economics</b><span id="cd"></span></header>
+<nav id="sb"></nav><main id="mv"></main>
+<script>
+const $=s=>document.querySelector(s),Y=()=>new Date().toLocaleDateString('en-CA'),K='jamtrk1';
+let S={};try{S=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
+S.st=S.st||{};S.nt=S.nt||{};S.log=S.log||[];S.dn=S.dn||{};S.tg=S.tg||4.5;
+const sv=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const SJ={mat:['Maths','#1a73e8'],mic:['Micro','#188038'],sta:['Stats','#e37400'],mac:['Macro','#9334e6'],ind:['Indian Economy','#d93025']};
+const T={
+mat:[['Functions, sets and sequences','M'],['Differential calculus','H'],['Integral calculus','M'],['Differential and difference equations','M'],['Linear algebra','H'],['Optimisation and LP','H']],
+mic:[['Consumer theory','H'],['Production and cost','H'],['Perfect competition','M'],['General equilibrium and welfare','M'],['Game theory','H','N'],['Imperfect competition','H'],['Market failure and information','H']],
+sta:[['Descriptive statistics and index numbers','M'],['Probability','H'],['Distributions and joint distributions','H'],['Sampling and estimation','M'],['Hypothesis testing','H'],['Correlation and regression','H']],
+mac:[['National income','M'],['Consumption and saving','M'],['Labour, investment, unemployment','L'],['Inflation and Phillips curve','M'],['Money and banking','H'],['Asset pricing','L'],['Fiscal policy','L'],['IS-LM and AD-AS','H'],['Growth models','H'],['Open economy','H']],
+ind:[['Reforms and Five-Year Plans','H','N'],['Poverty, inequality, employment','H','N'],['Demography and human development','M','N'],['Agriculture, industry, services','M','N'],['External sector and trade','H','N'],['Public finance and RBI','H','N']]};
+const G={
+mic0:{w:'Appears in every paper: utility maximisation, demand, elasticity, Engel curves, Slutsky. Worth roughly 4 to 8 marks.',
+c:'The consumer picks the affordable bundle with the highest utility. At an interior optimum the marginal rate of substitution equals the price ratio, MU1/MU2 = p1/p2. Corner solutions arise when that cannot hold, as with perfect substitutes or kinked utilities. The Slutsky equation splits a price change into a substitution effect and an income effect.',
+f:'Budget: p1x1 + p2x2 = m. Cobb-Douglas U = x1^a x2^(1-a) gives x1 = a m/p1 and x2 = (1-a) m/p2. Perfect complements min(x1, x2) give x = m/(p1 + p2). Elasticity = (dq/dp)(p/q).',
+t:'A monotonic transformation of u keeps the same preferences, but adding another term such as a sum of goods does not (2023 Q31). For max or min utilities, test the corners before using the tangency rule (2023 Q11, Q32). Check signs for income versus substitution effects.',
+p:'2023 Q31, Q52. 2024 Q2, Q32, Q54. 2025 Q21, Q22, Q23, Q29, Q30, Q50. 2026 Q29, Q30, Q45, Q55.'},
+mat4:{w:'Matrices, systems of equations and eigenvalues appear in most papers, often as quick NAT or MSQ questions.',
+c:'Rank is the number of independent rows. For Ax = b, a unique solution needs rank A = rank [A|b] = n. Equal ranks below n give infinitely many solutions. If rank A is less than rank [A|b] there is no solution. det = 0 means the matrix is singular and has no inverse. Eigenvalues solve det(A - lambda I) = 0, and for a 2x2 matrix the trace is the sum and the determinant is the product of the eigenvalues.',
+f:'2x2 inverse: (1/det) [[d, -b], [-c, a]]. det(A^n) = det(A)^n. Eigenvalues of A^n are lambda^n. rank(kI - M) drops when k is an eigenvalue of M.',
+t:'A zero row or column means det = 0, so do not expand. Use trace and determinant to find eigenvalues before solving the quadratic. Check that a matrix really is singular before asking for a power or inverse.',
+p:'2023 Q20, Q35, Q55. 2024 Q37, Q47. 2025 Q60. 2026 Q27.'}};
+const W={1:[['mat',2.5],['mic',2]],2:[['sta',2.5],['mac',2]],3:[['mat',2.5],['mic',2]],4:[['sta',2.5],['mac',2]],5:[['ind',2.5],['mic',2]],6:[['flex',4.5]],0:[['test',4.5]]};
+const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],MD={1:'Learn',2:'Learn',3:'Practise',4:'Practise'};
+const ST=['Not started','Learning','Revised','Tested'],gl={w:'Why it matters',c:'Core idea',f:'Key formulas',t:'Common traps',p:'Past papers'};
+const nm=k=>SJ[k]?SJ[k][0]:{flex:'Flex day: weakest topics and catch-up',test:'Test and review: topic test and error notebook'}[k];
+const wk0=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toLocaleDateString('en-CA')};
+const hrs=s=>S.log.filter(l=>l.d>=wk0()&&(!s||l.s===s)).reduce((a,l)=>a+l.m,0)/60;
+const days=()=>Math.max(0,Math.ceil((new Date('2027-02-14T00:00:00')-new Date())/864e5));
+const rev=k=>T[k].filter((t,i)=>S.st[k+i]>=2).length;
+const hh=h=>(h*S.tg/4.5).toFixed(1)+' h';
+function sb(){return '<a href="#/">Home</a><a href="#/plan">Weekly plan</a><a href="#/timer">Study timer</a><a href="#/data">Backup</a><hr>'+Object.keys(SJ).map(k=>`<a href="#/s/${k}"><i style="background:${SJ[k][1]}"></i>${SJ[k][0]}</a>`).join('')}
+function home(){const d=new Date().getDay();
+return `<div class="g2"><section><h1>${DN[d]}</h1>${W[d].map((b,i)=>{const id=Y()+i;return `<label class="card row"><input type="checkbox" ${S.dn[id]?'checked':''} onchange="S.dn['${id}']=this.checked;sv()"><span><b>${nm(b[0])}</b>, ${hh(b[1])}<br><small>${MD[d]||''}</small></span></label>`}).join('')}</section>
+<aside class="card"><h2 style="margin-top:0">JAM 2027</h2><div class="big">${days()}</div>days to go, exam on 14 February 2027<p>${hrs().toFixed(1)} hours logged this week</p></aside></div>
+<h2>Subjects</h2><div class="grid">${Object.keys(SJ).map(k=>`<a class="card sc" href="#/s/${k}"><div class="ban" style="background:${SJ[k][1]}">${SJ[k][0]}</div><p>${rev(k)} of ${T[k].length} topics revised<br>${hrs(k).toFixed(1)} hours this week</p></a>`).join('')}</div>`}
+function plan(){return `<h1>Weekly plan</h1><p>Daily study target in hours: <input type="number" step=".5" min="1" max="10" value="${S.tg}" style="width:80px" onchange="S.tg=+this.value||4.5;sv();go()"><br><small>Lower it in exam and lecture weeks. Block lengths scale with it.</small></p>`+[1,2,3,4,5,6,0].map(d=>`<div class="card"><b>${DN[d]}</b>${W[d].map(b=>`<div>${nm(b[0])}, ${hh(b[1])}</div>`).join('')}</div>`).join('')}
+function timer(){const r=S.run;return `<h1>Study timer</h1><div class="card">${r?`<p>Studying ${nm(r.s)}</p><div class="big" id="tm">00:00:00</div><p><button onclick="stop()">Stop and save</button></p>`:`<select id="ts">${Object.keys(SJ).map(k=>`<option value="${k}">${SJ[k][0]}</option>`).join('')}</select> <button onclick="start()">Start</button>`}</div><h2>This week</h2>${Object.keys(SJ).map(k=>`<div>${SJ[k][0]}: ${hrs(k).toFixed(1)} hours</div>`).join('')}<p><b>Total ${hrs().toFixed(1)} hours</b>, plan about ${(S.tg*7).toFixed(1)}</p>`}
+const start=()=>{S.run={s:$('#ts').value,t:Date.now()};sv();go()};
+const stop=()=>{const m=Math.max(1,Math.round((Date.now()-S.run.t)/6e4));S.log.push({d:Y(),s:S.run.s,m});delete S.run;sv();go()};
+setInterval(()=>{const e=$('#tm');if(e&&S.run){const s=Math.floor((Date.now()-S.run.t)/1e3);e.textContent=[s/3600|0,(s/60|0)%60,s%60].map(x=>String(x).padStart(2,'0')).join(':')}},1000);
+const cyc=(id,b)=>{S.st[id]=((S.st[id]|0)+1)%4;sv();b.textContent=ST[S.st[id]];b.dataset.s=S.st[id]};
+const guide=g=>Object.keys(gl).map(x=>`<h3>${gl[x]}</h3><p class="gd">${g[x]}</p>`).join('');
+function subj(k){const[n,c]=SJ[k];return `<div class="ban" style="background:${c}"><h1>${n}</h1>${rev(k)} of ${T[k].length} topics revised, ${hrs(k).toFixed(1)} hours this week</div>`+T[k].map((t,i)=>{const id=k+i,s=S.st[id]|0;return `<details class="card"><summary><span class="tt">${t[0]}</span><em class="y${t[1]}">${{H:'High',M:'Medium',L:'Low'}[t[1]]} yield</em>${t[2]?'<em class="nw">New</em>':''}<button data-s="${s}" onclick="event.preventDefault();cyc('${id}',this)">${ST[s]}</button></summary>${G[id]?guide(G[id]):'<p class="mu">The guide page for this topic is coming in a later batch.</p>'}<h3>Notes and links</h3><textarea oninput="S.nt['${id}']=this.value;sv()" placeholder="Your notes, or links to PDFs and videos">${esc(S.nt[id]||'')}</textarea></details>`}).join('')}
+function data(){return `<h1>Backup</h1><div class="card"><p>Your data lives only in this browser. Export a copy regularly, and import it on another device.</p><button onclick="ex()">Export backup</button> <input type="file" accept=".json" onchange="im(this)"></div>`}
+const ex=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='jam-tracker-'+Y()+'.json';a.click()};
+const im=i=>{const f=i.files[0];if(!f)return;f.text().then(t=>{try{S=JSON.parse(t);sv();location.reload()}catch(e){alert('This file is not a valid backup.')}})};
+function go(){const h=location.hash.split('/'),p=h[1]||'';$('#mv').innerHTML=p==='s'&&T[h[2]]?subj(h[2]):p==='plan'?plan():p==='timer'?timer():p==='data'?data():home();$('#sb').innerHTML=sb();$('#cd').textContent=days()+' days left';document.body.classList.remove('o');scrollTo(0,0)}
+addEventListener('hashchange',go);go();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>
