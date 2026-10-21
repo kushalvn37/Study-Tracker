@@ -38,7 +38,7 @@ button,select,input[type=number]{font:inherit;padding:6px 14px;border-radius:18p
 button[data-s="1"]{background:#fef7e0;color:#202124}button[data-s="2"]{background:#e6f4ea;color:#202124}button[data-s="3"]{background:#d2e3fc;color:#202124}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 textarea{width:100%;min-height:90px;font:500 20px/1.3 Caveat,cursive;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px}
-.gd{font:16px/1.65 'Source Serif 4',serif;margin:0;max-width:70ch}.mu,small{color:var(--mu)}
+.gd{font:16px/1.65 'Source Serif 4',serif;margin:0;max-width:70ch}.mu,small{color:var(--mu)}.nt{font:500 20px/1.3 Caveat,cursive;white-space:pre-wrap;margin:6px 0}input:not([type]){font:inherit;padding:8px 12px;border:1px solid var(--ln);border-radius:8px;background:var(--card);color:var(--tx)}
 @media(max-width:800px){body{grid-template-columns:1fr}header{grid-column:1}#mn{display:block}
 #sb{display:none;position:fixed;top:56px;left:0;bottom:0;width:250px;background:var(--card);z-index:6}body.o #sb{display:block}.g2{grid-template-columns:1fr}}
 </style></head>
@@ -48,9 +48,9 @@ textarea{width:100%;min-height:90px;font:500 20px/1.3 Caveat,cursive;background:
 <script>
 const $=s=>document.querySelector(s),Y=()=>new Date().toLocaleDateString('en-CA'),K='jamtrk1';
 let S={};try{S=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
-S.st=S.st||{};S.nt=S.nt||{};S.log=S.log||[];S.dn=S.dn||{};S.tg=S.tg||4.5;
+S.st=S.st||{};S.nt=S.nt||{};S.log=S.log||[];S.dn=S.dn||{};S.tg=S.tg||4.5;S.lib=S.lib||[];
 const sv=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
-const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const SJ={mat:['Maths','#1a73e8'],mic:['Micro','#188038'],sta:['Stats','#e37400'],mac:['Macro','#9334e6'],ind:['Indian Economy','#d93025']};
 const T={
 mat:[['Functions, sets and sequences','M'],['Differential calculus','H'],['Integral calculus','M'],['Differential and difference equations','M'],['Linear algebra','H'],['Optimisation and LP','H']],
@@ -69,21 +69,25 @@ c:'Rank is the number of independent rows. For Ax = b, a unique solution needs r
 f:'2x2 inverse: (1/det) [[d, -b], [-c, a]]. det(A^n) = det(A)^n. Eigenvalues of A^n are lambda^n. rank(kI - M) drops when k is an eigenvalue of M.',
 t:'A zero row or column means det = 0, so do not expand. Use trace and determinant to find eigenvalues before solving the quadratic. Check that a matrix really is singular before asking for a power or inverse.',
 p:'2023 Q20, Q35, Q55. 2024 Q37, Q47. 2025 Q60. 2026 Q27.'}};
-const W={1:[['mat',2.5],['mic',2]],2:[['sta',2.5],['mac',2]],3:[['mat',2.5],['mic',2]],4:[['sta',2.5],['mac',2]],5:[['ind',2.5],['mic',2]],6:[['flex',4.5]],0:[['test',4.5]]};
-const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],MD={1:'Learn',2:'Learn',3:'Practise',4:'Practise'};
+const DW={1:[['mat',2.5],['mic',2]],2:[['sta',2.5],['mac',2]],3:[['mat',2.5],['mic',2]],4:[['sta',2.5],['mac',2]],5:[['ind',1.5],['mic',1.5],['drill',1.5]],6:[['flex',4.5]],0:[['test',4.5]]},W=S.w=S.w||JSON.parse(JSON.stringify(DW));
+const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],MD={1:'Learn',2:'Learn',3:'Practise, numericals first',4:'Practise, numericals first'};
 const ST=['Not started','Learning','Revised','Tested'],gl={w:'Why it matters',c:'Core idea',f:'Key formulas',t:'Common traps',p:'Past papers'};
-const nm=k=>SJ[k]?SJ[k][0]:{flex:'Flex day: weakest topics and catch-up',test:'Test and review: topic test and error notebook'}[k];
+const nm=k=>SJ[k]?SJ[k][0]:{flex:'Flex day: NAT drills first, then weakest topics',drill:'NAT and formula drill: Maths, Stats, Macro',test:'Test and review: topic test and error notebook'}[k];
 const wk0=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toLocaleDateString('en-CA')};
 const hrs=s=>S.log.filter(l=>l.d>=wk0()&&(!s||l.s===s)).reduce((a,l)=>a+l.m,0)/60;
-const days=()=>Math.max(0,Math.ceil((new Date('2027-02-14T00:00:00')-new Date())/864e5));
-const rev=k=>T[k].filter((t,i)=>S.st[k+i]>=2).length;
+const days=()=>Math.max(0,Math.ceil((new Date((S.ex||'2027-02-14')+'T00:00:00')-new Date())/864e5));
+let ed=false,lh='';const TT=()=>S.TP||T,WK=()=>S.WK||W,own=()=>{if(!S.TP)S.TP=JSON.parse(JSON.stringify(T))},ownW=()=>{if(!S.WK)S.WK=JSON.parse(JSON.stringify(W))};
+const vis=k=>TT()[k].map((t,i)=>[t,i]).filter(x=>!x[0][3]),tl=k=>vis(k).length,rev=k=>vis(k).filter(x=>S.st[k+x[1]]>=2).length;
+const OP={mat:'Maths',mic:'Micro',sta:'Stats',mac:'Macro',ind:'Indian Economy',drill:'NAT and formula drill',flex:'Flex day',test:'Test and review'};
+const eb=(d,i,j,v)=>{ownW();S.WK[d][i][j]=v;sv();go()},rb=(d,i)=>{ownW();S.WK[d].splice(i,1);sv();go()},ab=d=>{ownW();S.WK[d].push(['mat',1]);sv();go()},rst=()=>{if(confirm('Reset the plan to the default?')){delete S.WK;sv();go()}};
+const et=(k,i,j,v)=>{own();S.TP[k][i][j]=v;sv();go()},at=k=>{own();S.TP[k].push(['New topic','M']);sv();go()},rt=()=>{if(confirm('Reset all topics to the default list?')){delete S.TP;sv();go()}};
 const hh=h=>(h*S.tg/4.5).toFixed(1)+' h';
-function sb(){return '<a href="#/">Home</a><a href="#/plan">Weekly plan</a><a href="#/timer">Study timer</a><a href="#/data">Backup</a><hr>'+Object.keys(SJ).map(k=>`<a href="#/s/${k}"><i style="background:${SJ[k][1]}"></i>${SJ[k][0]}</a>`).join('')}
+function sb(){return '<a href="#/">Home</a><a href="#/plan">Weekly plan</a><a href="#/timer">Study timer</a><a href="#/lib">Study material</a><a href="#/data">Backup</a><hr>'+Object.keys(SJ).map(k=>`<a href="#/s/${k}"><i style="background:${SJ[k][1]}"></i>${SJ[k][0]}</a>`).join('')}
 function home(){const d=new Date().getDay();
 return `<div class="g2"><section><h1>${DN[d]}</h1>${W[d].map((b,i)=>{const id=Y()+i;return `<label class="card row"><input type="checkbox" ${S.dn[id]?'checked':''} onchange="S.dn['${id}']=this.checked;sv()"><span><b>${nm(b[0])}</b>, ${hh(b[1])}<br><small>${MD[d]||''}</small></span></label>`}).join('')}</section>
 <aside class="card"><h2 style="margin-top:0">JAM 2027</h2><div class="big">${days()}</div>days to go, exam on 14 February 2027<p>${hrs().toFixed(1)} hours logged this week</p></aside></div>
 <h2>Subjects</h2><div class="grid">${Object.keys(SJ).map(k=>`<a class="card sc" href="#/s/${k}"><div class="ban" style="background:${SJ[k][1]}">${SJ[k][0]}</div><p>${rev(k)} of ${T[k].length} topics revised<br>${hrs(k).toFixed(1)} hours this week</p></a>`).join('')}</div>`}
-function plan(){return `<h1>Weekly plan</h1><p>Daily study target in hours: <input type="number" step=".5" min="1" max="10" value="${S.tg}" style="width:80px" onchange="S.tg=+this.value||4.5;sv();go()"><br><small>Lower it in exam and lecture weeks. Block lengths scale with it.</small></p>`+[1,2,3,4,5,6,0].map(d=>`<div class="card"><b>${DN[d]}</b>${W[d].map(b=>`<div>${nm(b[0])}, ${hh(b[1])}</div>`).join('')}</div>`).join('')}
+function plan(){return `<h1>Weekly plan</h1><p>Daily study target in hours: <input type="number" step=".5" min="1" max="10" value="${S.tg}" style="width:80px" onchange="S.tg=+this.value||4.5;sv();go()"><br><small>Lower it in exam and lecture weeks. Block lengths scale with it.</small></p>`+[1,2,3,4,5,6,0].map(d=>`<div class="card"><b>${DN[d]}</b>${W[d].map((b,i)=>`<div class="row" style="margin:6px 0"><select onchange="W[${d}][${i}][0]=this.value;sv();go()">${opts(b[0])}</select><input type="number" step=".5" min=".5" max="8" value="${b[1]}" style="width:76px" onchange="W[${d}][${i}][1]=+this.value||1;sv();go()"> hours <button onclick="W[${d}].splice(${i},1);sv();go()">Remove</button></div>`).join('')}<button onclick="W[${d}].push(['mat',1]);sv();go()">Add block</button></div>`).join('')+`<p><small>Hours here are the base plan; the daily target above scales them.</small><br><button onclick="if(confirm('Reset the plan to the default?')){delete S.w;sv();location.reload()}">Reset to default</button></p>`}
 function timer(){const r=S.run;return `<h1>Study timer</h1><div class="card">${r?`<p>Studying ${nm(r.s)}</p><div class="big" id="tm">00:00:00</div><p><button onclick="stop()">Stop and save</button></p>`:`<select id="ts">${Object.keys(SJ).map(k=>`<option value="${k}">${SJ[k][0]}</option>`).join('')}</select> <button onclick="start()">Start</button>`}</div><h2>This week</h2>${Object.keys(SJ).map(k=>`<div>${SJ[k][0]}: ${hrs(k).toFixed(1)} hours</div>`).join('')}<p><b>Total ${hrs().toFixed(1)} hours</b>, plan about ${(S.tg*7).toFixed(1)}</p>`}
 const start=()=>{S.run={s:$('#ts').value,t:Date.now()};sv();go()};
 const stop=()=>{const m=Math.max(1,Math.round((Date.now()-S.run.t)/6e4));S.log.push({d:Y(),s:S.run.s,m});delete S.run;sv();go()};
@@ -91,10 +95,21 @@ setInterval(()=>{const e=$('#tm');if(e&&S.run){const s=Math.floor((Date.now()-S.
 const cyc=(id,b)=>{S.st[id]=((S.st[id]|0)+1)%4;sv();b.textContent=ST[S.st[id]];b.dataset.s=S.st[id]};
 const guide=g=>Object.keys(gl).map(x=>`<h3>${gl[x]}</h3><p class="gd">${g[x]}</p>`).join('');
 function subj(k){const[n,c]=SJ[k];return `<div class="ban" style="background:${c}"><h1>${n}</h1>${rev(k)} of ${T[k].length} topics revised, ${hrs(k).toFixed(1)} hours this week</div>`+T[k].map((t,i)=>{const id=k+i,s=S.st[id]|0;return `<details class="card"><summary><span class="tt">${t[0]}</span><em class="y${t[1]}">${{H:'High',M:'Medium',L:'Low'}[t[1]]} yield</em>${t[2]?'<em class="nw">New</em>':''}<button data-s="${s}" onclick="event.preventDefault();cyc('${id}',this)">${ST[s]}</button></summary>${G[id]?guide(G[id]):'<p class="mu">The guide page for this topic is coming in a later batch.</p>'}<h3>Notes and links</h3><textarea oninput="S.nt['${id}']=this.value;sv()" placeholder="Your notes, or links to PDFs and videos">${esc(S.nt[id]||'')}</textarea></details>`}).join('')}
+const opts=v=>Object.keys(SJ).concat(['drill','flex','test']).map(k=>`<option value="${k}" ${k===v?'selected':''}>${nm(k)}</option>`).join('');
+let ED=null,LQ='',LS='';
+const lk=u=>/^https?:\/\//i.test(u)?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`:esc(u);
+const lf=()=>S.lib.filter(x=>(!LS||x.s===LS)&&(x.t+' '+x.b+' '+x.u).toLowerCase().includes(LQ.toLowerCase()));
+const ll=()=>lf().map(x=>`<div class="card"><b>${esc(x.t)}</b> ${x.s?`<em>${SJ[x.s][0]}</em>`:''}${x.u?`<p>${lk(x.u)}</p>`:''}<p class="nt">${esc(x.b)}</p><button onclick="ED=${x.id};go()">Edit</button> <button onclick="delLib(${x.id})">Delete</button></div>`).join('')||'<p class="mu">Nothing here yet.</p>';
+const fl=()=>{$('#ll').innerHTML=ll()};
+const so=v=>'<option value="">General</option>'+Object.keys(SJ).map(k=>`<option value="${k}" ${k===v?'selected':''}>${SJ[k][0]}</option>`).join('');
+function lib(){const e=S.lib.find(x=>x.id===ED)||{};
+return `<h1>Study material</h1><div class="card"><input id="lt" placeholder="Title" value="${esc(e.t||'')}" style="width:100%;margin-bottom:8px"><div class="row" style="margin-bottom:8px"><select id="ls">${so(e.s||'')}</select><input id="lu" placeholder="Link (optional)" value="${esc(e.u||'')}" style="flex:1"></div><textarea id="lb" placeholder="Your notes">${esc(e.b||'')}</textarea><p><button onclick="saveLib()">${ED?'Save changes':'Add material'}</button>${ED?' <button onclick="ED=null;go()">Cancel</button>':''}</p></div><div class="row" style="margin:12px 0"><input placeholder="Search" value="${esc(LQ)}" oninput="LQ=this.value;fl()" style="flex:1"><select onchange="LS=this.value;go()">${so(LS).replace('>General<','>All subjects<')}</select></div><div id="ll">${ll()}</div>`}
+const saveLib=()=>{const o={t:$('#lt').value.trim()||'Untitled',s:$('#ls').value,u:$('#lu').value.trim(),b:$('#lb').value};if(ED)Object.assign(S.lib.find(x=>x.id===ED),o);else S.lib.unshift({id:Date.now(),...o});ED=null;sv();go()};
+const delLib=id=>{if(confirm('Delete this item?')){S.lib=S.lib.filter(x=>x.id!==id);sv();go()}};
 function data(){return `<h1>Backup</h1><div class="card"><p>Your data lives only in this browser. Export a copy regularly, and import it on another device.</p><button onclick="ex()">Export backup</button> <input type="file" accept=".json" onchange="im(this)"></div>`}
 const ex=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='jam-tracker-'+Y()+'.json';a.click()};
 const im=i=>{const f=i.files[0];if(!f)return;f.text().then(t=>{try{S=JSON.parse(t);sv();location.reload()}catch(e){alert('This file is not a valid backup.')}})};
-function go(){const h=location.hash.split('/'),p=h[1]||'';$('#mv').innerHTML=p==='s'&&T[h[2]]?subj(h[2]):p==='plan'?plan():p==='timer'?timer():p==='data'?data():home();$('#sb').innerHTML=sb();$('#cd').textContent=days()+' days left';document.body.classList.remove('o');scrollTo(0,0)}
+function go(){const h=location.hash.split('/'),p=h[1]||'';$('#mv').innerHTML=p==='s'&&T[h[2]]?subj(h[2]):p==='plan'?plan():p==='timer'?timer():p==='lib'?lib():p==='data'?data():home();$('#sb').innerHTML=sb();$('#cd').textContent=days()+' days left';document.body.classList.remove('o');scrollTo(0,0)}
 addEventListener('hashchange',go);go();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>
